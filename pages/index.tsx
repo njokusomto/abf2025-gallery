@@ -33,11 +33,11 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
         <title>Africa Blockchain Festival 2025 Photos | Relive the experience! 💫</title>
         <meta
           property="og:image"
-          content="https://nextjsconf-pics.vercel.app/og-image.png"
+          content="https://2025.africablockchainfestival.com/ABF-2025-Gallery.jpg"
         />
         <meta
           name="twitter:image"
-          content="https://nextjsconf-pics.vercel.app/og-image.png"
+          content="https://2025.africablockchainfestival.com/ABF-2025-Gallery.jpg"
         />
       </Head>
       <main className="mx-auto max-w-[1960px] p-4">
@@ -67,7 +67,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
             </p>
             <a
               className="pointer z-10 mt-6 rounded-lg border border-white bg-white px-3 py-2 text-sm font-semibold text-black transition hover:bg-white/10 hover:text-white md:mt-4"
-              href="https://africablockchainfestival.com/"
+              href="https://africablockchainfestival.com"
               target="_blank"
               rel="noreferrer"
             >
@@ -84,7 +84,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
               className="after:content group relative mb-5 block w-full cursor-zoom-in after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
             >
               <Image
-                alt="Next.js Conf photo"
+                alt="Africa Blockchain Festival 2025 photo"
                 className="transform rounded-lg brightness-90 transition will-change-auto group-hover:brightness-110"
                 style={{ transform: "translate3d(0, 0, 0)" }}
                 placeholder="blur"
