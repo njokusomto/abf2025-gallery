@@ -5,7 +5,7 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="icon" href="/logo-white.png" />
           <meta
             name="description"
             content="See pictures from the 2025 edition of the Africa Blockchain Festival."
