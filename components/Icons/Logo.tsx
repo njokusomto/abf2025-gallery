@@ -5,11 +5,14 @@ export default function Logo() {
       width="515"
       height="167"
       viewBox="0 0 515 167"
+      role="img"
+      aria-label="Africa Blockchain Festival Logo"
     >
       <image
-        xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgMAAACnCAYAAACMyV+GAAAQAElEQVR4A..."
+        href="https://2025.africablockchainfestival.com/logo-white.png"
         width="515"
         height="167"
+        preserveAspectRatio="xMidYMid meet"
       />
     </svg>
   );
