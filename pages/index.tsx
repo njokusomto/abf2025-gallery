@@ -40,7 +40,8 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
         />
       </Head>
 
-      <main className="mx-auto max-w-[1960px] p-6 bg-[#143140] min-h-screen">
+      {/* Main background now deep black for contrast */}
+      <main className="mx-auto max-w-[1960px] p-6 bg-black min-h-screen text-white transition-all duration-500">
         {photoId && (
           <Modal
             images={images}
@@ -50,14 +51,14 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
 
         <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4 [column-fill:_balance]">
           {/* Hero Card */}
-          <div className="relative mb-5 flex flex-col items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-b from-[#1b3540] via-[#143140] to-[#122e3a] text-center text-white shadow-[0_12px_40px_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-300 hover:shadow-[0_16px_60px_rgba(0,0,0,0.55)] h-[700px]">
+          <div className="relative mb-5 flex flex-col items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-b from-[#1b3540] via-[#143140] to-[#122e3a] p-10 text-center text-white shadow-[0_12px_40px_rgba(0,0,0,0.5)] backdrop-blur-md transition-all duration-300 hover:shadow-[0_16px_60px_rgba(0,0,0,0.7)] h-[680px]">
 
-            {/* Kigali Skyline (moved higher) */}
+            {/* Kigali Skyline */}
             <div className="absolute top-6 left-0 right-0 flex justify-center opacity-25">
               <Image
                 src="https://2025.africablockchainfestival.com/rwanda-outline.png"
                 alt="Kigali Skyline"
-                width={1200}
+                width={1100}
                 height={400}
                 unoptimized
                 className="object-contain"
@@ -65,10 +66,10 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
               />
             </div>
 
-            {/* Centered Content */}
-            <div className="relative z-10 flex flex-col items-center justify-center px-6">
-              {/* Logo perfectly centered */}
-              <div className="flex justify-center items-center scale-125 sm:scale-135 mb-8 mt-20">
+            {/* Hero Content */}
+            <div className="relative z-10 flex flex-col items-center justify-center mt-48">
+              {/* Centered Logo */}
+              <div className="flex justify-center items-center scale-110 sm:scale-125 mb-8">
                 <Logo />
               </div>
 
@@ -110,7 +111,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
                 className="rounded-2xl brightness-90 transition-all duration-500 ease-out group-hover:scale-105 group-hover:brightness-110"
                 placeholder="blur"
                 blurDataURL={blurDataUrl}
-                src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_scale,w_720/${public_id}.${format}`}
+                src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/f_auto,q_auto,c_scale,w_720/${public_id}`}
                 width={720}
                 height={480}
                 sizes="(max-width: 640px) 100vw,
