@@ -51,30 +51,34 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
         )}
 
         <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4">
-          {/* Hero Card */}
+          {/* Hero Section */}
           <div className="relative mb-5 flex h-[629px] flex-col items-center justify-center gap-4 overflow-hidden rounded-lg px-6 pb-16 text-center text-white shadow-xl bg-[#143140]">
-            {/* Background Image: Rwanda Outline (white) */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-20">
+            {/* Background Image: Rwanda Outline (white, unoptimized) */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-25">
               <Image
                 src="https://2025.africablockchainfestival.com/rwanda-outline.png"
                 alt="Rwanda Outline"
                 fill
+                unoptimized // prevents 400 error by bypassing Next optimizer
                 className="object-contain"
-                style={{ filter: "brightness(0) invert(1)" }} // turns it white
+                style={{
+                  filter: "brightness(0) invert(1)", // turns the outline white
+                  opacity: 0.2,
+                }}
                 priority
               />
               <span className="absolute inset-x-0 bottom-0 h-[400px] bg-gradient-to-b from-transparent via-[#143140]/70 to-[#143140]"></span>
             </div>
 
-            {/* Centered Logo */}
+            {/* Centered Logo and Content */}
             <div className="z-10 flex flex-col items-center justify-center">
               <Logo />
               <h1 className="mt-8 mb-4 text-base font-bold uppercase tracking-widest text-[#BEFFDC]">
                 2025 Event Photos
               </h1>
               <p className="max-w-[40ch] text-[#BEFFDC]/80 sm:max-w-[32ch]">
-                Our incredible Africa Blockchain Festival got together in
-                Rwanda for our first ever in-person conference!
+                Our incredible Africa Blockchain Festival got together in Rwanda
+                for our first ever in-person conference!
               </p>
               <a
                 className="pointer z-10 mt-6 rounded-lg border-2 border-[#FE4600] bg-[#FE4600] px-3 py-2 text-sm font-semibold text-white transition hover:bg-transparent hover:text-[#FE4600] md:mt-4"
