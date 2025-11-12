@@ -1,264 +1,156 @@
-import {
-  ArrowDownTrayIcon,
-  ArrowTopRightOnSquareIcon,
-  ArrowUturnLeftIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-import { AnimatePresence, motion, MotionConfig } from "framer-motion";
-import Image from "next/image";
-import { useState } from "react";
-import { useSwipeable } from "react-swipeable";
-import { variants } from "../utils/animationVariants";
-import downloadPhoto from "../utils/downloadPhoto";
-import { range } from "../utils/range";
-import type { ImageProps, SharedModalProps } from "../utils/types";
-import Twitter from "./Icons/Twitter";
+"use client";
+
+import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight, Download } from "lucide-react";
+import type { ImageProps } from "../utils/types";
 
 export default function SharedModal({
-  index,
   images,
+  index,
   changePhotoId,
   closeModal,
   navigation,
-  currentPhoto,
-  direction,
-}: SharedModalProps) {
-  const [loaded, setLoaded] = useState(false);
+}: {
+  images: ImageProps[];
+  index: number;
+  changePhotoId: (val: number) => void;
+  closeModal: () => void;
+  navigation?: boolean;
+}) {
+  const currentImage = images[index];
 
-  if (!images || !images.length) return null;
-  const filteredImages = images.filter((img: ImageProps) =>
-    range(index - 15, index + 15).includes(img.id)
-  );
-
-  const handlers = useSwipeable({
-    onSwipedLeft: () => {
-      if (index < images.length - 1) changePhotoId(index + 1);
-    },
-    onSwipedRight: () => {
-      if (index > 0) changePhotoId(index - 1);
-    },
-    trackMouse: true,
-  });
-
-  const currentImage = images[index] || currentPhoto;
   if (!currentImage) return null;
 
-  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-  const baseURL = `https://res.cloudinary.com/${cloudName}/image/upload`;
-  const pageUrl = `https://2025.africablockchainfestival.com/p/${index}`;
-  const shareText = encodeURIComponent(
-    `Check out this photo from Africa Blockchain Festival 2025!\n${pageUrl}`
-  );
-
   return (
-    <MotionConfig
-      transition={{
-        x: { type: "spring", stiffness: 300, damping: 30 },
-        opacity: { duration: 0.25 },
-      }}
+    <motion.div
+      className="relative flex flex-col items-center justify-center"
+      initial={{ opacity: 0, scale: 0.97 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.97 }}
+      transition={{ duration: 0.25 }}
     >
-      <div
-        className="relative z-50 flex aspect-[3/2] w-full max-w-7xl items-center justify-center"
-        {...handlers}
+      {/* Close button (optional top-right) */}
+      <button
+        onClick={closeModal}
+        className="absolute top-4 right-4 text-white text-3xl font-light hover:text-[#FE4600] transition-all"
       >
-        {/* Main image */}
-        <div className="w-full overflow-hidden">
-          <div className="relative flex aspect-[3/2] items-center justify-center">
-            <AnimatePresence initial={false} custom={direction}>
-              <motion.div
-                key={index}
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                className="absolute"
-              >
-                <Image
-                  unoptimized
-                  src={`${baseURL}/c_scale,${
-                    navigation ? "w_1280" : "w_1920"
-                  }/${currentImage.public_id}.${currentImage.format}`}
-                  width={navigation ? 1280 : 1920}
-                  height={navigation ? 853 : 1280}
-                  priority
-                  alt={`Africa Blockchain Festival photo ${index + 1}`}
-                  onLoad={() => setLoaded(true)}
-                  className="rounded-lg shadow-2xl transition-all duration-500"
-                />
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
+        ×
+      </button>
 
-        {/* Overlay Controls */}
-        {loaded && (
-          <div className="absolute inset-0 mx-auto flex max-w-7xl items-center justify-center">
-            {navigation && (
-              <>
-                {index > 0 && (
-                  <button
-                    className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white/75 backdrop-blur-lg hover:bg-black/75 hover:text-white"
-                    onClick={() => changePhotoId(index - 1)}
-                  >
-                    <ChevronLeftIcon className="h-6 w-6" />
-                  </button>
-                )}
-                {index + 1 < images.length && (
-                  <button
-                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white/75 backdrop-blur-lg hover:bg-black/75 hover:text-white"
-                    onClick={() => changePhotoId(index + 1)}
-                  >
-                    <ChevronRightIcon className="h-6 w-6" />
-                  </button>
-                )}
-              </>
-            )}
-
-            {/* Top-right icons */}
-            <div className="absolute top-0 right-0 flex items-center gap-2 p-3 text-white">
-              {navigation ? (
-                <a
-                  href={`${baseURL}/${currentImage.public_id}.${currentImage.format}`}
-                  className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg hover:bg-black/75 hover:text-white"
-                  target="_blank"
-                  rel="noreferrer"
-                  title="Open full-size version"
-                >
-                  <ArrowTopRightOnSquareIcon className="h-5 w-5" />
-                </a>
-              ) : (
-                <>
-                  {/* X (Twitter) Share */}
-                  <a
-                    href={`https://twitter.com/intent/tweet?text=${shareText}`}
-                    className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg hover:bg-black/75 hover:text-white"
-                    target="_blank"
-                    rel="noreferrer"
-                    title="Share on X"
-                  >
-                    <Twitter className="h-5 w-5" />
-                  </a>
-
-                  {/* WhatsApp Share */}
-                  <a
-                    href={`https://wa.me/?text=${shareText}`}
-                    className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg hover:bg-black/75 hover:text-white"
-                    target="_blank"
-                    rel="noreferrer"
-                    title="Share on WhatsApp"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                      className="h-5 w-5"
-                    >
-                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.472-.149-.672.15s-.773.967-.947 1.166c-.174.199-.349.224-.646.075-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.654-2.059-.173-.299-.018-.46.13-.609.134-.133.298-.348.447-.522.15-.174.199-.299.298-.498.1-.199.05-.374-.025-.523-.075-.149-.672-1.611-.92-2.206-.242-.58-.487-.5-.672-.51-.173-.008-.372-.01-.571-.01-.199 0-.522.074-.796.373-.273.299-1.045 1.02-1.045 2.479 0 1.459 1.07 2.868 1.219 3.066.149.199 2.104 3.215 5.098 4.509.713.307 1.267.489 1.7.625.714.228 1.363.196 1.875.119.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.413-.074-.123-.272-.198-.57-.347z" />
-                      <path d="M12.004 2c-5.523 0-10 4.477-10 10 0 1.768.469 3.415 1.285 4.844L2 22l5.33-1.266a9.955 9.955 0 004.675 1.189c5.523 0 10-4.477 10-10s-4.477-10-9.999-10zm0 18.938a8.944 8.944 0 01-4.561-1.252l-.326-.193-3.162.751.845-3.084-.211-.316A8.938 8.938 0 013.062 12c0-4.941 4.002-8.938 8.938-8.938 4.941 0 8.938 3.997 8.938 8.938s-3.997 8.938-8.938 8.938z" />
-                    </svg>
-                  </a>
-
-                  {/* Instagram Share (copy link prompt) */}
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(pageUrl);
-                      alert("Link copied! Paste it in Instagram to share.");
-                    }}
-                    className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg hover:bg-black/75 hover:text-white"
-                    title="Share on Instagram"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                      className="h-5 w-5"
-                    >
-                      <path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5A4.25 4.25 0 007.75 20.5h8.5A4.25 4.25 0 0020.5 16.25v-8.5A4.25 4.25 0 0016.25 3.5h-8.5zM12 7a5 5 0 110 10 5 5 0 010-10zm0 1.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7zm5.75-.75a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5z" />
-                    </svg>
-                  </button>
-                </>
-              )}
-
-              <button
-                onClick={() =>
-                  downloadPhoto(
-                    `${baseURL}/${currentImage.public_id}.${currentImage.format}`,
-                    `${index}.jpg`
-                  )
-                }
-                className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg hover:bg-black/75 hover:text-white"
-                title="Download full-size"
-              >
-                <ArrowDownTrayIcon className="h-5 w-5" />
-              </button>
-            </div>
-
-            {/* Close button */}
-            <div className="absolute top-0 left-0 flex items-center gap-2 p-3 text-white">
-              <button
-                onClick={closeModal}
-                className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg hover:bg-black/75 hover:text-white"
-              >
-                {navigation ? (
-                  <XMarkIcon className="h-5 w-5" />
-                ) : (
-                  <ArrowUturnLeftIcon className="h-5 w-5" />
-                )}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Bottom thumbnail bar */}
-        {navigation && (
-          <div className="fixed inset-x-0 bottom-0 z-40 overflow-hidden bg-gradient-to-b from-black/0 to-black/60">
-            <motion.div
-              initial={false}
-              className="mx-auto mt-6 mb-6 flex aspect-[3/2] h-14"
-            >
-              <AnimatePresence initial={false}>
-                {filteredImages.map(({ public_id, format, id }) => (
-                  <motion.button
-                    key={id}
-                    initial={{
-                      width: "0%",
-                      x: `${Math.max((index - 1) * -100, 15 * -100)}%`,
-                    }}
-                    animate={{
-                      scale: id === index ? 1.25 : 1,
-                      width: "100%",
-                      x: `${Math.max(index * -100, 15 * -100)}%`,
-                    }}
-                    exit={{ width: "0%" }}
-                    onClick={() => changePhotoId(id)}
-                    className={`${
-                      id === index
-                        ? "z-20 rounded-md shadow shadow-black/50"
-                        : "z-10"
-                    } relative inline-block w-full shrink-0 overflow-hidden focus:outline-none`}
-                  >
-                    <Image
-                      unoptimized
-                      alt="Thumbnail"
-                      width={180}
-                      height={120}
-                      className={`${
-                        id === index
-                          ? "brightness-110 hover:brightness-110"
-                          : "brightness-50 contrast-125 hover:brightness-75"
-                      } h-full object-cover transition`}
-                      src={`${baseURL}/c_scale,w_180/${public_id}.${format}`}
-                    />
-                  </motion.button>
-                ))}
-              </AnimatePresence>
-            </motion.div>
-          </div>
-        )}
+      {/* Main image */}
+      <div className="flex items-center justify-center max-h-[90vh] max-w-[95vw]">
+        <img
+          src={currentImage.secure_url}
+          alt={currentImage.public_id}
+          className="rounded-lg shadow-2xl object-contain"
+          style={{
+            maxHeight: "90vh",
+            maxWidth: "95vw",
+            height: "auto",
+            width: "auto",
+          }}
+        />
       </div>
-    </MotionConfig>
+
+      {/* Navigation arrows */}
+      {navigation && (
+        <>
+          {index > 0 && (
+            <button
+              onClick={() => changePhotoId(index - 1)}
+              className="absolute left-5 text-white hover:text-[#FE4600]"
+              aria-label="Previous image"
+            >
+              <ChevronLeft size={40} />
+            </button>
+          )}
+          {index + 1 < images.length && (
+            <button
+              onClick={() => changePhotoId(index + 1)}
+              className="absolute right-5 text-white hover:text-[#FE4600]"
+              aria-label="Next image"
+            >
+              <ChevronRight size={40} />
+            </button>
+          )}
+        </>
+      )}
+
+      {/* Download + Share */}
+      <div className="flex items-center justify-center gap-6 mt-6">
+        {/* Download */}
+        <a
+          href={currentImage.secure_url}
+          download
+          className="text-white hover:text-[#FE4600]"
+          title="Download"
+        >
+          <Download size={26} />
+        </a>
+
+        {/* X */}
+        <a
+          href={`https://twitter.com/intent/tweet?text=Check%20out%20this%20photo%20from%20ABF2025!&url=${encodeURIComponent(
+            currentImage.secure_url
+          )}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-white hover:text-[#1DA1F2]"
+          title="Share on X"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 512 512"
+            fill="currentColor"
+            width="26"
+            height="26"
+          >
+            <path d="M389.2 48h70.6L305.4 234.2 481 464H343.6L233.4 320.4 105.2 464H34.6l168.4-192.4L32 48h139.6l99 130.4L389.2 48zm-24.8 373.2h39.1L154.3 90.9h-42L364.4 421.2z" />
+          </svg>
+        </a>
+
+        {/* WhatsApp */}
+        <a
+          href={`https://wa.me/?text=Check%20this%20out%20${encodeURIComponent(
+            currentImage.secure_url
+          )}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-white hover:text-[#25D366]"
+          title="Share on WhatsApp"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 448 512"
+            fill="currentColor"
+            width="26"
+            height="26"
+          >
+            <path d="M380.9 97.1C339-2.3 228-33.8 141.6 21.6 66.4 71 36.7 162.8 70.4 239.1L48 448l208.9-22.4c70.1 16.4 142.8-21.8 171.1-87.9 35.8-82.8-4.8-179.4-47.1-240.6zM244.7 401c-63.6 0-115.3-51.7-115.3-115.3S181.1 170.4 244.7 170.4s115.3 51.7 115.3 115.3S308.3 401 244.7 401z" />
+          </svg>
+        </a>
+
+        {/* Instagram */}
+        <a
+          href={`https://www.instagram.com/?url=${encodeURIComponent(
+            currentImage.secure_url
+          )}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-white hover:text-[#E4405F]"
+          title="Share on Instagram"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 448 512"
+            fill="currentColor"
+            width="26"
+            height="26"
+          >
+            <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9S160.5 370.8 224.1 370.8 339 319.5 339 255.9 287.7 141 224.1 141zm146.4-54.7c0 14.9-12.1 27-27 27s-27-12.1-27-27 12.1-27 27-27 27 12.1 27 27zM398.8 80c-8.5-21.1-25-37.6-46.1-46.1C323.1 23 224 23 224 23s-99.1 0-128.7 10.9C74.2 42.4 57.7 58.9 49.2 80 38.3 109.6 38.3 208.7 38.3 208.7s0 99.1 10.9 128.7c8.5 21.1 25 37.6 46.1 46.1C124.9 396 224 396 224 396s99.1 0 128.7-10.9c21.1-8.5 37.6-25 46.1-46.1 10.9-29.6 10.9-128.7 10.9-128.7s0-99.1-10.9-128.7z" />
+          </svg>
+        </a>
+      </div>
+    </motion.div>
   );
 }

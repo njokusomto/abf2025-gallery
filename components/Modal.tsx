@@ -1,77 +1,77 @@
+"use client";
+
 import { Dialog } from "@headlessui/react";
-import { motion } from "framer-motion";
-import { useRouter } from "next/router";
-import { useRef, useState } from "react";
-import useKeypress from "react-use-keypress";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import type { ImageProps } from "../utils/types";
 import SharedModal from "./SharedModal";
 
 export default function Modal({
   images,
+  initialIndex,
   onClose,
 }: {
   images: ImageProps[];
-  onClose?: () => void;
+  initialIndex: number;
+  onClose: () => void;
 }) {
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
-
-  const { photoId } = router.query;
-  const index = Number(photoId);
-
+  const [curIndex, setCurIndex] = useState(initialIndex);
   const [direction, setDirection] = useState(0);
-  const [curIndex, setCurIndex] = useState(index);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
-  function handleClose() {
-    router.push("/", undefined, { shallow: true });
-    if (onClose) onClose();
-  }
+  // handle Escape key to close modal
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [onClose]);
 
-  function changePhotoId(newVal: number) {
-    setDirection(newVal > index ? 1 : -1);
+  // navigate next / prev
+  const changePhotoId = (newVal: number) => {
+    if (newVal < 0 || newVal >= images.length) return;
+    setDirection(newVal > curIndex ? 1 : -1);
     setCurIndex(newVal);
-    router.push(
-      { query: { photoId: newVal } },
-      `/p/${newVal}`,
-      { shallow: true }
-    );
-  }
-
-  useKeypress("ArrowRight", () => {
-    if (index + 1 < images.length) changePhotoId(index + 1);
-  });
-
-  useKeypress("ArrowLeft", () => {
-    if (index > 0) changePhotoId(index - 1);
-  });
+  };
 
   return (
-    <Dialog
-      static
-      open={true}
-      onClose={handleClose}
-      initialFocus={overlayRef}
-      className="fixed inset-0 z-10 flex items-center justify-center"
-    >
-      {/* Semi-transparent backdrop */}
-      <Dialog.Overlay
-        ref={overlayRef}
-        as={motion.div}
-        key="backdrop"
-        className="fixed inset-0 z-30 bg-black/70 backdrop-blur-2xl"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      />
+    <AnimatePresence>
+      <Dialog
+        static
+        open={true}
+        onClose={onClose}
+        initialFocus={overlayRef}
+        className="fixed inset-0 z-50 flex items-center justify-center"
+      >
+        <Dialog.Overlay
+          ref={overlayRef}
+          as={motion.div}
+          key="backdrop"
+          className="fixed inset-0 bg-black/80 backdrop-blur-md"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        />
 
-      {/* Pass images safely into SharedModal */}
-      <SharedModal
-        index={curIndex}
-        direction={direction}
-        images={images}
-        changePhotoId={changePhotoId}
-        closeModal={handleClose}
-        navigation={true}
-      />
-    </Dialog>
+        <motion.div
+          key={curIndex}
+          className="relative z-50 flex items-center justify-center w-full h-full px-4"
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.97 }}
+          transition={{ duration: 0.2 }}
+        >
+          <SharedModal
+            index={curIndex}
+            direction={direction}
+            images={images}
+            changePhotoId={changePhotoId}
+            closeModal={onClose}
+            navigation={true}
+          />
+        </motion.div>
+      </Dialog>
+    </AnimatePresence>
   );
 }
