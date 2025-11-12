@@ -50,14 +50,14 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
 
         <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4 [column-fill:_balance]">
           {/* Hero Card */}
-          <div className="relative mb-5 flex flex-col items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-b from-[#1b3540] via-[#143140] to-[#122e3a] p-10 text-center text-white shadow-[0_12px_40px_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-300 hover:shadow-[0_16px_60px_rgba(0,0,0,0.55)] h-[680px]">
+          <div className="relative mb-5 flex flex-col items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-b from-[#1b3540] via-[#143140] to-[#122e3a] text-center text-white shadow-[0_12px_40px_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-300 hover:shadow-[0_16px_60px_rgba(0,0,0,0.55)] h-[700px]">
 
-            {/* Kigali Skyline (top section) */}
-            <div className="absolute top-12 left-0 right-0 flex justify-center opacity-25">
+            {/* Kigali Skyline (moved higher) */}
+            <div className="absolute top-6 left-0 right-0 flex justify-center opacity-25">
               <Image
                 src="https://2025.africablockchainfestival.com/rwanda-outline.png"
                 alt="Kigali Skyline"
-                width={1100}
+                width={1200}
                 height={400}
                 unoptimized
                 className="object-contain"
@@ -65,10 +65,10 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
               />
             </div>
 
-            {/* Hero Content */}
-            <div className="relative z-10 flex flex-col items-center justify-center mt-40">
-              {/* Centered Logo */}
-              <div className="flex justify-center items-center scale-125 sm:scale-135 mb-8">
+            {/* Centered Content */}
+            <div className="relative z-10 flex flex-col items-center justify-center px-6">
+              {/* Logo perfectly centered */}
+              <div className="flex justify-center items-center scale-125 sm:scale-135 mb-8 mt-20">
                 <Logo />
               </div>
 
