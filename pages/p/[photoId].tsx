@@ -44,7 +44,6 @@ export default function PhotoPage({ images }: { images: ImageProps[] }) {
         changePhotoId={changePhotoId}
         closeModal={closeModal}
         navigation={true}
-        direction={0}
       />
     </div>
   );
