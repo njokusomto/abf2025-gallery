@@ -13,46 +13,36 @@ export default function Modal({
   images: ImageProps[];
   onClose?: () => void;
 }) {
-  let overlayRef = useRef();
+  const overlayRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   const { photoId } = router.query;
-  let index = Number(photoId);
+  const index = Number(photoId);
 
   const [direction, setDirection] = useState(0);
   const [curIndex, setCurIndex] = useState(index);
 
   function handleClose() {
     router.push("/", undefined, { shallow: true });
-    onClose();
+    if (onClose) onClose();
   }
 
   function changePhotoId(newVal: number) {
-    if (newVal > index) {
-      setDirection(1);
-    } else {
-      setDirection(-1);
-    }
+    setDirection(newVal > index ? 1 : -1);
     setCurIndex(newVal);
     router.push(
-      {
-        query: { photoId: newVal },
-      },
+      { query: { photoId: newVal } },
       `/p/${newVal}`,
-      { shallow: true },
+      { shallow: true }
     );
   }
 
   useKeypress("ArrowRight", () => {
-    if (index + 1 < images.length) {
-      changePhotoId(index + 1);
-    }
+    if (index + 1 < images.length) changePhotoId(index + 1);
   });
 
   useKeypress("ArrowLeft", () => {
-    if (index > 0) {
-      changePhotoId(index - 1);
-    }
+    if (index > 0) changePhotoId(index - 1);
   });
 
   return (
@@ -63,6 +53,7 @@ export default function Modal({
       initialFocus={overlayRef}
       className="fixed inset-0 z-10 flex items-center justify-center"
     >
+      {/* Semi-transparent backdrop */}
       <Dialog.Overlay
         ref={overlayRef}
         as={motion.div}
@@ -71,6 +62,8 @@ export default function Modal({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       />
+
+      {/* Pass images safely into SharedModal */}
       <SharedModal
         index={curIndex}
         direction={direction}
@@ -78,6 +71,8 @@ export default function Modal({
         changePhotoId={changePhotoId}
         closeModal={handleClose}
         navigation={true}
+        /** 👇 Ensure Cloudinary URLs load without Next optimization */
+        unoptimized={true}
       />
     </Dialog>
   );
