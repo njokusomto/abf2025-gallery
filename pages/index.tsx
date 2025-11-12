@@ -40,7 +40,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
         />
       </Head>
 
-      {/* Main background now deep black for contrast */}
+      {/* Black background for contrast */}
       <main className="mx-auto max-w-[1960px] p-6 bg-black min-h-screen text-white transition-all duration-500">
         {photoId && (
           <Modal
@@ -49,6 +49,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
           />
         )}
 
+        {/* Masonry grid */}
         <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4 [column-fill:_balance]">
           {/* Hero Card */}
           <div className="relative mb-5 flex flex-col items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-b from-[#1b3540] via-[#143140] to-[#122e3a] p-10 text-center text-white shadow-[0_12px_40px_rgba(0,0,0,0.5)] backdrop-blur-md transition-all duration-300 hover:shadow-[0_16px_60px_rgba(0,0,0,0.7)] h-[680px]">
@@ -66,25 +67,21 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
               />
             </div>
 
-            {/* Hero Content */}
+            {/* Content */}
             <div className="relative z-10 flex flex-col items-center justify-center mt-48">
-              {/* Centered Logo */}
               <div className="flex justify-center items-center scale-110 sm:scale-125 mb-8">
                 <Logo />
               </div>
 
-              {/* Headline */}
               <h1 className="text-lg font-semibold uppercase tracking-[0.25em] text-[#BEFFDC] mb-4">
                 2025 Event Photos
               </h1>
 
-              {/* Subtext */}
               <p className="max-w-[45ch] text-[#BEFFDC]/80 leading-relaxed mb-8">
                 Our incredible Africa Blockchain Festival community came together in Rwanda
                 for our first ever in-person conference!
               </p>
 
-              {/* CTA Button */}
               <a
                 className="inline-block rounded-lg border-2 border-[#FE4600] bg-[#FE4600] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-transparent hover:text-[#FE4600]"
                 href="https://africablockchainfestival.com"
@@ -96,7 +93,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
             </div>
           </div>
 
-          {/* Gallery Grid */}
+          {/* Image Gallery */}
           {images.map(({ id, public_id, format, blurDataUrl }) => (
             <Link
               key={id}
@@ -107,11 +104,12 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
               className="group relative mb-5 block w-full cursor-zoom-in overflow-hidden rounded-2xl shadow-md transition-all duration-300 hover:shadow-2xl"
             >
               <Image
+                unoptimized
                 alt="Africa Blockchain Festival 2025 photo"
                 className="rounded-2xl brightness-90 transition-all duration-500 ease-out group-hover:scale-105 group-hover:brightness-110"
                 placeholder="blur"
                 blurDataURL={blurDataUrl}
-                src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/f_auto,q_auto,c_scale,w_720/${public_id}`}
+                src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/f_auto,q_auto,c_scale,w_720/${public_id}.${format}`}
                 width={720}
                 height={480}
                 sizes="(max-width: 640px) 100vw,
@@ -124,8 +122,8 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="p-8 text-center text-[#BEFFDC]/80 bg-black border-t border-[#FE4600]/40">
+      {/* Footer with teal background */}
+      <footer className="p-8 text-center text-[#BEFFDC]/80 bg-[#143140] border-t border-[#FE4600]/40">
         Africa Blockchain Festival. © 2025. All rights reserved.
       </footer>
     </>
