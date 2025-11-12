@@ -2,10 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
 
-  // ✅ Tell Next.js that Cloudinary is a trusted external image domain
+  // Tell Next.js that Cloudinary is a trusted external image domain
   images: {
     domains: ["res.cloudinary.com"],
-    // 🚫 Disable the built-in optimizer for all Cloudinary URLs
+    // Disable the built-in optimizer for all Cloudinary URLs
     unoptimized: true,
   },
 
