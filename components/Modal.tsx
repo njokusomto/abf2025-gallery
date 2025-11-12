@@ -71,8 +71,6 @@ export default function Modal({
         changePhotoId={changePhotoId}
         closeModal={handleClose}
         navigation={true}
-        /** 👇 Ensure Cloudinary URLs load without Next optimization */
-        unoptimized={true}
       />
     </Dialog>
   );
