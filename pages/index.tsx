@@ -40,7 +40,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
         />
       </Head>
 
-      <main className="mx-auto max-w-[1960px] p-4 bg-[#143140] min-h-screen">
+      <main className="mx-auto max-w-[1960px] p-4 bg-[#0F2027] min-h-screen">
         {photoId && (
           <Modal
             images={images}
@@ -50,38 +50,37 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
           />
         )}
 
-        <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4">
-          {/* Hero Section */}
-          <div className="relative mb-5 flex h-[629px] flex-col items-center justify-center gap-4 overflow-hidden rounded-lg px-6 pb-16 text-center text-white shadow-xl bg-[#143140]">
-            {/* Background Image: Rwanda Outline (white, unoptimized) */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-25">
+        <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4 [column-fill:_balance]">
+          {/* Hero Card */}
+          <div className="relative mb-5 flex h-[630px] flex-col items-center justify-end overflow-hidden rounded-xl bg-gradient-to-b from-[#143140] to-[#0B151B] p-8 text-center shadow-xl transition-all duration-300 hover:shadow-2xl">
+            {/* Subtle Background Image */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-10">
               <Image
                 src="https://2025.africablockchainfestival.com/rwanda-outline.png"
                 alt="Rwanda Outline"
                 fill
-                unoptimized // prevents 400 error by bypassing Next optimizer
+                unoptimized
                 className="object-contain"
-                style={{
-                  filter: "brightness(0) invert(1)", // turns the outline white
-                  opacity: 0.2,
-                }}
+                style={{ filter: "brightness(0) invert(1)", opacity: 0.15 }}
                 priority
               />
-              <span className="absolute inset-x-0 bottom-0 h-[400px] bg-gradient-to-b from-transparent via-[#143140]/70 to-[#143140]"></span>
             </div>
 
-            {/* Centered Logo and Content */}
-            <div className="z-10 flex flex-col items-center justify-center">
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#143140]/80 to-black/80"></div>
+
+            {/* Hero Content */}
+            <div className="relative z-10 flex flex-col items-center justify-center">
               <Logo />
-              <h1 className="mt-8 mb-4 text-base font-bold uppercase tracking-widest text-[#BEFFDC]">
+              <h1 className="mt-8 mb-3 text-lg font-bold uppercase tracking-[0.2em] text-[#BEFFDC]">
                 2025 Event Photos
               </h1>
-              <p className="max-w-[40ch] text-[#BEFFDC]/80 sm:max-w-[32ch]">
-                Our incredible Africa Blockchain Festival got together in Rwanda
-                for our first ever in-person conference!
+              <p className="max-w-[42ch] text-[#BEFFDC]/80 leading-relaxed">
+                Our incredible Africa Blockchain Festival community came
+                together in Rwanda for our first ever in-person conference!
               </p>
               <a
-                className="pointer z-10 mt-6 rounded-lg border-2 border-[#FE4600] bg-[#FE4600] px-3 py-2 text-sm font-semibold text-white transition hover:bg-transparent hover:text-[#FE4600] md:mt-4"
+                className="mt-8 inline-block rounded-md border-2 border-[#FE4600] bg-[#FE4600] px-5 py-2 text-sm font-semibold text-white shadow-md transition-all hover:bg-transparent hover:text-[#FE4600]"
                 href="https://africablockchainfestival.com"
                 target="_blank"
                 rel="noreferrer"
@@ -91,7 +90,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
             </div>
           </div>
 
-          {/* Gallery */}
+          {/* Gallery Grid */}
           {images.map(({ id, public_id, format, blurDataUrl }) => (
             <Link
               key={id}
@@ -99,11 +98,11 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
               as={`/p/${id}`}
               ref={id === Number(lastViewedPhoto) ? lastViewedPhotoRef : null}
               shallow
-              className="group relative mb-5 block w-full cursor-zoom-in rounded-lg overflow-hidden"
+              className="group relative mb-5 block w-full cursor-zoom-in overflow-hidden rounded-xl shadow-md transition-all duration-300 hover:shadow-2xl"
             >
               <Image
                 alt="Africa Blockchain Festival 2025 photo"
-                className="transform rounded-lg brightness-90 transition duration-300 group-hover:brightness-110"
+                className="rounded-xl brightness-90 transition-all duration-500 ease-out group-hover:scale-105 group-hover:brightness-110"
                 style={{ transform: "translate3d(0, 0, 0)" }}
                 placeholder="blur"
                 blurDataURL={blurDataUrl}
@@ -120,7 +119,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
         </div>
       </main>
 
-      <footer className="p-6 text-center text-[#BEFFDC]/90 sm:p-12 bg-[#143140] border-t border-[#FE4600]/40">
+      <footer className="p-8 text-center text-[#BEFFDC]/90 bg-[#0F2027] border-t border-[#FE4600]/40 mt-10">
         Africa Blockchain Festival. © 2025. All rights reserved.
       </footer>
     </>
