@@ -52,22 +52,28 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
 
         <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4 [column-fill:_balance]">
           {/* Hero Card */}
-          <div className="relative mb-5 flex h-[630px] flex-col items-center justify-end overflow-hidden rounded-xl bg-gradient-to-b from-[#143140] to-[#0B151B] p-8 text-center shadow-xl transition-all duration-300 hover:shadow-2xl">
-            {/* Subtle Background Image */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-10">
-              <Image
-                src="https://2025.africablockchainfestival.com/rwanda-outline.png"
-                alt="Rwanda Outline"
-                fill
-                unoptimized
-                className="object-contain"
-                style={{ filter: "brightness(0) invert(1)", opacity: 0.15 }}
-                priority
-              />
+          <div className="relative mb-5 flex h-[600px] flex-col items-center justify-end overflow-hidden rounded-2xl bg-gradient-to-b from-[#143140] via-[#122d38] to-[#0F2027] p-10 text-center text-white shadow-xl transition-all duration-300 hover:shadow-2xl">
+            
+            {/* Background City Outline */}
+            <div className="absolute inset-0 flex items-end justify-center pointer-events-none">
+              <div className="relative w-full h-[75%] flex items-end justify-center">
+                <Image
+                  src="https://2025.africablockchainfestival.com/rwanda-outline.png"
+                  alt="Kigali Skyline"
+                  fill={false}
+                  width={900}
+                  height={500}
+                  unoptimized
+                  className="object-contain opacity-25"
+                  style={{
+                    filter: "brightness(0) invert(1)",
+                  }}
+                />
+              </div>
             </div>
 
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#143140]/80 to-black/80"></div>
+            {/* Overlay gradient to fade bottom cleanly */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0F2027] via-transparent to-transparent"></div>
 
             {/* Hero Content */}
             <div className="relative z-10 flex flex-col items-center justify-center">
@@ -98,11 +104,11 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
               as={`/p/${id}`}
               ref={id === Number(lastViewedPhoto) ? lastViewedPhotoRef : null}
               shallow
-              className="group relative mb-5 block w-full cursor-zoom-in overflow-hidden rounded-xl shadow-md transition-all duration-300 hover:shadow-2xl"
+              className="group relative mb-5 block w-full cursor-zoom-in overflow-hidden rounded-2xl shadow-md transition-all duration-300 hover:shadow-2xl"
             >
               <Image
                 alt="Africa Blockchain Festival 2025 photo"
-                className="rounded-xl brightness-90 transition-all duration-500 ease-out group-hover:scale-105 group-hover:brightness-110"
+                className="rounded-2xl brightness-90 transition-all duration-500 ease-out group-hover:scale-105 group-hover:brightness-110"
                 style={{ transform: "translate3d(0, 0, 0)" }}
                 placeholder="blur"
                 blurDataURL={blurDataUrl}
