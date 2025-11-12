@@ -50,17 +50,14 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
 
         <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4 [column-fill:_balance]">
           {/* Hero Card */}
-          <div className="relative mb-5 flex h-[640px] flex-col items-center justify-end overflow-hidden rounded-3xl bg-gradient-to-b from-[#1b3540] via-[#143140] to-[#122e3a] p-10 text-center text-white shadow-[0_12px_40px_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-300 hover:shadow-[0_16px_60px_rgba(0,0,0,0.55)]">
-            
-            {/* Subtle top background pattern */}
-            <div className="absolute inset-0 bg-gradient-to-t from-transparent via-[#143140]/40 to-[#1b3540]/40" />
+          <div className="relative mb-5 flex flex-col items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-b from-[#1b3540] via-[#143140] to-[#122e3a] p-10 text-center text-white shadow-[0_12px_40px_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-300 hover:shadow-[0_16px_60px_rgba(0,0,0,0.55)] h-[680px]">
 
-            {/* City Outline placed above logo area */}
-            <div className="absolute top-24 left-0 right-0 flex justify-center opacity-20">
+            {/* Kigali Skyline (top section) */}
+            <div className="absolute top-12 left-0 right-0 flex justify-center opacity-25">
               <Image
                 src="https://2025.africablockchainfestival.com/rwanda-outline.png"
                 alt="Kigali Skyline"
-                width={1000}
+                width={1100}
                 height={400}
                 unoptimized
                 className="object-contain"
@@ -69,19 +66,26 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
             </div>
 
             {/* Hero Content */}
-            <div className="relative z-10 flex flex-col items-center justify-center">
-              <div className="scale-110 sm:scale-125">
+            <div className="relative z-10 flex flex-col items-center justify-center mt-40">
+              {/* Centered Logo */}
+              <div className="flex justify-center items-center scale-125 sm:scale-135 mb-8">
                 <Logo />
               </div>
-              <h1 className="mt-8 mb-3 text-lg font-semibold uppercase tracking-[0.25em] text-[#BEFFDC]">
+
+              {/* Headline */}
+              <h1 className="text-lg font-semibold uppercase tracking-[0.25em] text-[#BEFFDC] mb-4">
                 2025 Event Photos
               </h1>
-              <p className="max-w-[42ch] text-[#BEFFDC]/80 leading-relaxed">
-                Our incredible Africa Blockchain Festival community came
-                together in Rwanda for our first ever in-person conference!
+
+              {/* Subtext */}
+              <p className="max-w-[45ch] text-[#BEFFDC]/80 leading-relaxed mb-8">
+                Our incredible Africa Blockchain Festival community came together in Rwanda
+                for our first ever in-person conference!
               </p>
+
+              {/* CTA Button */}
               <a
-                className="mt-8 inline-block rounded-lg border-2 border-[#FE4600] bg-[#FE4600] px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-transparent hover:text-[#FE4600]"
+                className="inline-block rounded-lg border-2 border-[#FE4600] bg-[#FE4600] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-transparent hover:text-[#FE4600]"
                 href="https://africablockchainfestival.com"
                 target="_blank"
                 rel="noreferrer"
@@ -90,8 +94,8 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
               </a>
             </div>
 
-            {/* Soft highlight bottom edge */}
-            <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#143140] via-transparent to-transparent"></div>
+            {/* Soft gradient fade at bottom */}
+            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#143140] via-transparent to-transparent pointer-events-none"></div>
           </div>
 
           {/* Gallery Grid */}
