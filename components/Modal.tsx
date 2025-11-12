@@ -16,10 +16,9 @@ export default function Modal({
   onClose: () => void;
 }) {
   const [curIndex, setCurIndex] = useState(initialIndex);
-  const [direction, setDirection] = useState(0);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  // handle Escape key to close modal
+  // ESC closes modal
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -28,10 +27,9 @@ export default function Modal({
     return () => window.removeEventListener("keydown", handleKey);
   }, [onClose]);
 
-  // navigate next / prev
+  // navigation
   const changePhotoId = (newVal: number) => {
     if (newVal < 0 || newVal >= images.length) return;
-    setDirection(newVal > curIndex ? 1 : -1);
     setCurIndex(newVal);
   };
 
@@ -47,7 +45,6 @@ export default function Modal({
         <Dialog.Overlay
           ref={overlayRef}
           as={motion.div}
-          key="backdrop"
           className="fixed inset-0 bg-black/80 backdrop-blur-md"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -64,7 +61,6 @@ export default function Modal({
         >
           <SharedModal
             index={curIndex}
-            direction={direction}
             images={images}
             changePhotoId={changePhotoId}
             closeModal={onClose}
