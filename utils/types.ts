@@ -1,12 +1,13 @@
 /* eslint-disable no-unused-vars */
-export interface ImageProps {
+export type ImageProps = {
   id: number;
-  height: string;
-  width: string;
   public_id: string;
   format: string;
   blurDataUrl?: string;
-}
+  width: number;
+  height: number;
+  secure_url: string;
+};
 
 export interface SharedModalProps {
   index: number;
