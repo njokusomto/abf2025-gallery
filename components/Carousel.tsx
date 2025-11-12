@@ -1,52 +1,52 @@
+"use client";
+
 import Image from "next/image";
-import { useRouter } from "next/router";
 import useKeypress from "react-use-keypress";
 import type { ImageProps } from "../utils/types";
-import { useLastViewedPhoto } from "../utils/useLastViewedPhoto";
 import SharedModal from "./SharedModal";
 
 export default function Carousel({
   index,
-  currentPhoto,
+  images,
+  onClose,
 }: {
   index: number;
-  currentPhoto: ImageProps;
+  images: ImageProps[];
+  onClose: () => void;
 }) {
-  const router = useRouter();
-  const [, setLastViewedPhoto] = useLastViewedPhoto();
-
-  function closeModal() {
-    setLastViewedPhoto(currentPhoto.id);
-    router.push("/", undefined, { shallow: true });
-  }
-
+  // Navigate between images
   function changePhotoId(newVal: number) {
-    return newVal;
+    return newVal; // handled internally by SharedModal
   }
 
+  // Close modal with Escape key
   useKeypress("Escape", () => {
-    closeModal();
+    onClose();
   });
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Dim background */}
       <button
-        className="absolute inset-0 z-30 cursor-default bg-black backdrop-blur-2xl"
-        onClick={closeModal}
+        className="absolute inset-0 z-30 cursor-default bg-black/80 backdrop-blur-2xl"
+        onClick={onClose}
+        aria-label="Close lightbox"
       >
         <Image
-          src={currentPhoto.blurDataUrl}
-          className="pointer-events-none h-full w-full"
+          src={images[index].blurDataUrl}
           alt="blurred background"
+          className="pointer-events-none h-full w-full object-cover opacity-60"
           fill
           priority={true}
         />
       </button>
+
+      {/* Actual modal content */}
       <SharedModal
         index={index}
+        images={images}
         changePhotoId={changePhotoId}
-        currentPhoto={currentPhoto}
-        closeModal={closeModal}
+        closeModal={onClose}
         navigation={false}
       />
     </div>
