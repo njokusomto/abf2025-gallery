@@ -1,30 +1,32 @@
+"use client";
+
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import type { ImageProps } from "../../utils/types";
+import images from "../../utils/images"; // ✅ load statically
+import { useEffect, useState } from "react";
 
-// ✅ Dynamically import the modal so it only renders client-side
+// Dynamically import modal only on client-side
 const Modal = dynamic(() => import("../../components/Modal"), {
   ssr: false,
-  loading: () => <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>,
+  loading: () => (
+    <div className="min-h-screen flex items-center justify-center text-white">
+      Loading...
+    </div>
+  ),
 });
 
 export default function PhotoPage() {
   const router = useRouter();
   const { photoId } = router.query;
+  const [mounted, setMounted] = useState(false);
 
-  const [images, setImages] = useState<ImageProps[]>([]);
-
+  // ✅ Ensures rendering only happens client-side (no SSR)
   useEffect(() => {
-    // ✅ Load images dynamically or from your static JSON file
-    // Replace this with your real import or API call
-    import("../../utils/images").then((mod) => {
-      setImages(mod.default || []);
-    });
+    setMounted(true);
   }, []);
 
-  // ✅ Guard against SSR undefined router values
-  if (!photoId || !images.length) return null;
+  if (!mounted) return null;
 
   const index = Number(photoId);
   const imageExists = images[index];
