@@ -14,39 +14,34 @@ export default function Carousel({
   images: ImageProps[];
   onClose: () => void;
 }) {
-  // Navigate between images
-  function changePhotoId(newVal: number) {
-    return newVal; // handled internally by SharedModal
-  }
+  const close = () => onClose();
 
-  // Close modal with Escape key
-  useKeypress("Escape", () => {
-    onClose();
-  });
+  useKeypress("Escape", close);
+
+  const changePhotoId = () => {
+    return; // Carousel modal doesn’t use navigation
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Dim background */}
       <button
         className="absolute inset-0 z-30 cursor-default bg-black/80 backdrop-blur-2xl"
-        onClick={onClose}
-        aria-label="Close lightbox"
+        onClick={close}
+        aria-label="Close Lightbox"
       >
         <Image
-          src={images[index].blurDataUrl}
-          alt="blurred background"
-          className="pointer-events-none h-full w-full object-cover opacity-60"
+          src={images[index].blurDataUrl || "/placeholder.png"}
+          alt=""
+          className="pointer-events-none h-full w-full object-cover opacity-50"
           fill
-          priority={true}
         />
       </button>
 
-      {/* Actual modal content */}
       <SharedModal
         index={index}
         images={images}
         changePhotoId={changePhotoId}
-        closeModal={onClose}
+        closeModal={close}
         navigation={false}
       />
     </div>

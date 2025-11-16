@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog } from "@headlessui/react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import type { ImageProps } from "../utils/types";
 import SharedModal from "./SharedModal";
@@ -18,16 +18,14 @@ export default function Modal({
   const [curIndex, setCurIndex] = useState(initialIndex);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  // ESC closes modal
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
+    const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  // navigation
   const changePhotoId = (newVal: number) => {
     if (newVal < 0 || newVal >= images.length) return;
     setCurIndex(newVal);
@@ -52,7 +50,6 @@ export default function Modal({
         />
 
         <motion.div
-          key={curIndex}
           className="relative z-50 flex items-center justify-center w-full h-full px-4"
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
