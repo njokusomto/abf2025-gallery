@@ -18,6 +18,7 @@ export default function Modal({
   const [curIndex, setCurIndex] = useState(initialIndex);
   const overlayRef = useRef<HTMLDivElement>(null);
 
+  // Esc key to close modal
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -40,6 +41,7 @@ export default function Modal({
         initialFocus={overlayRef}
         className="fixed inset-0 z-50 flex items-center justify-center"
       >
+        {/* overlay to darken background */}
         <Dialog.Overlay
           ref={overlayRef}
           as={motion.div}
@@ -48,7 +50,7 @@ export default function Modal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         />
-
+        {/* modal content container */}
         <motion.div
           className="relative z-50 flex items-center justify-center w-full h-full px-4"
           initial={{ opacity: 0, scale: 0.97 }}

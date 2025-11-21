@@ -8,89 +8,79 @@ import {
   Download,
   Twitter,
   Instagram,
-  MessageCircle, // WhatsApp alternative
+  MessageCircle,
 } from "lucide-react";
 import type { ImageProps, SharedModalProps } from "../utils/types";
 import useKeypress from "react-use-keypress";
 
 export default function SharedModal({
   index,
-  images = [],
+  images,
   changePhotoId,
   closeModal,
   navigation = true,
 }: SharedModalProps) {
+  // fetch current image from images array
   const current: ImageProps = images[index];
 
+  // handle next and previous navigation
   const next = () => {
     if (index + 1 < images.length) changePhotoId(index + 1);
   };
-
   const prev = () => {
     if (index > 0) changePhotoId(index - 1);
   };
 
+  // keyboard navigation
   useKeypress(["ArrowRight", "ArrowLeft"], (e) => {
     if (e.key === "ArrowRight") next();
     if (e.key === "ArrowLeft") prev();
   });
 
+  // share handlers
   const downloadImage = () => {
     const link = document.createElement("a");
     link.href = current.secure_url;
     link.download = `${current.public_id}.${current.format}`;
     link.click();
   };
-
   const shareToTwitter = () => {
     window.open(
-      `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-        current.secure_url
-      )}`,
+      `https://twitter.com/intent/tweet?url=${encodeURIComponent(current.secure_url)}`,
       "_blank"
     );
   };
-
   const shareToInstagram = () => {
+    // Instagram doesn't support direct share with a URL, open homepage
     window.open("https://instagram.com", "_blank");
   };
-
   const shareToWhatsApp = () => {
-    window.open(
-      `https://wa.me/?text=${encodeURIComponent(current.secure_url)}`,
-      "_blank"
-    );
+    window.open(`https://wa.me/?text=${encodeURIComponent(current.secure_url)}`, "_blank");
   };
 
   return (
     <div className="relative select-none flex flex-col items-center justify-center max-w-[95vw] max-h-[95vh]">
-      {/* Top Controls */}
+      {/* Top controls: close and share buttons */}
       <div className="flex items-center gap-4 bg-black/70 text-white px-4 py-2 rounded-full mb-3 z-50">
         <button onClick={closeModal} className="flex items-center gap-1">
           <X className="w-4 h-4" />
           <span>CLOSE</span>
         </button>
-
         <span className="opacity-70">Share</span>
-
         <button onClick={shareToTwitter}>
           <Twitter className="w-5 h-5" />
         </button>
-
         <button onClick={shareToInstagram}>
           <Instagram className="w-5 h-5" />
         </button>
-
         <button onClick={shareToWhatsApp}>
           <MessageCircle className="w-5 h-5" />
         </button>
-
         <button onClick={downloadImage}>
           <Download className="w-5 h-5" />
         </button>
       </div>
-
-      {/* Image */}
+      {/* Image display; object-contain ensures natural aspect ratio */}
       <motion.img
         key={current.secure_url}
         src={current.secure_url}
@@ -99,8 +89,7 @@ export default function SharedModal({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       />
-
-      {/* Navigation */}
+      {/* navigation arrows */}
       {navigation && index > 0 && (
         <button
           onClick={prev}
@@ -109,7 +98,6 @@ export default function SharedModal({
           <ChevronLeft className="w-6 h-6" />
         </button>
       )}
-
       {navigation && index + 1 < images.length && (
         <button
           onClick={next}
