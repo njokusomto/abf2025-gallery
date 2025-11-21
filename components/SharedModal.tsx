@@ -18,94 +18,82 @@ export default function SharedModal({
   images,
   changePhotoId,
   closeModal,
-  navigation = true,
+  navigation,
 }: SharedModalProps) {
-  // fetch current image from images array
-  const current: ImageProps = images[index];
+  const current: ImageProps = images![index];
 
-  // handle next and previous navigation
-  const next = () => {
-    if (index + 1 < images.length) changePhotoId(index + 1);
-  };
-  const prev = () => {
-    if (index > 0) changePhotoId(index - 1);
-  };
-
-  // keyboard navigation
-  useKeypress(["ArrowRight", "ArrowLeft"], (e) => {
-    if (e.key === "ArrowRight") next();
-    if (e.key === "ArrowLeft") prev();
+  useKeypress("ArrowRight", () => {
+    if (!navigation) return;
+    if (index + 1 < images!.length) changePhotoId(index + 1);
   });
 
-  // share handlers
-  const downloadImage = () => {
-    const link = document.createElement("a");
-    link.href = current.secure_url;
-    link.download = `${current.public_id}.${current.format}`;
-    link.click();
-  };
-  const shareToTwitter = () => {
-    window.open(
-      `https://twitter.com/intent/tweet?url=${encodeURIComponent(current.secure_url)}`,
-      "_blank"
-    );
-  };
-  const shareToInstagram = () => {
-    // Instagram doesn't support direct share with a URL, open homepage
-    window.open("https://instagram.com", "_blank");
-  };
-  const shareToWhatsApp = () => {
-    window.open(`https://wa.me/?text=${encodeURIComponent(current.secure_url)}`, "_blank");
-  };
+  useKeypress("ArrowLeft", () => {
+    if (!navigation) return;
+    if (index > 0) changePhotoId(index - 1);
+  });
+
+  const shareUrl = current.secure_url;
 
   return (
-    <div className="relative select-none flex flex-col items-center justify-center max-w-[95vw] max-h-[95vh]">
-      {/* Top controls: close and share buttons */}
-      <div className="flex items-center gap-4 bg-black/70 text-white px-4 py-2 rounded-full mb-3 z-50">
-        <button onClick={closeModal} className="flex items-center gap-1">
-          <X className="w-4 h-4" />
-          <span>CLOSE</span>
-        </button>
-        <span className="opacity-70">Share</span>
-        <button onClick={shareToTwitter}>
-          <Twitter className="w-5 h-5" />
-        </button>
-        <button onClick={shareToInstagram}>
-          <Instagram className="w-5 h-5" />
-        </button>
-        <button onClick={shareToWhatsApp}>
-          <MessageCircle className="w-5 h-5" />
-        </button>
-        <button onClick={downloadImage}>
-          <Download className="w-5 h-5" />
-        </button>
+    <div className="relative flex flex-col items-center">
+      {/* Controls */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-40">
+        <div className="flex items-center gap-4 bg-black/60 px-4 py-2 rounded-full text-white">
+          <button onClick={closeModal} className="flex items-center gap-2">
+            <X className="w-4 h-4" />
+            CLOSE
+          </button>
+
+          <span>Share</span>
+
+          <a href={`https://twitter.com/share?url=${shareUrl}`} target="_blank">
+            <Twitter className="w-4 h-4" />
+          </a>
+
+          <a href={`https://www.instagram.com/?url=${shareUrl}`} target="_blank">
+            <Instagram className="w-4 h-4" />
+          </a>
+
+          <a href={`https://wa.me/?text=${shareUrl}`} target="_blank">
+            <MessageCircle className="w-4 h-4" /> 
+          </a>
+
+          <a href={shareUrl} download>
+            <Download className="w-4 h-4" />
+          </a>
+        </div>
       </div>
-      {/* Image display; object-contain ensures natural aspect ratio */}
+
+      {/* Navigation */}
+      {navigation && (
+        <>
+          <button
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-white z-40"
+            onClick={() => index > 0 && changePhotoId(index - 1)}
+          >
+            <ChevronLeft className="w-10 h-10" />
+          </button>
+
+          <button
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-white z-40"
+            onClick={() =>
+              index + 1 < images!.length && changePhotoId(index + 1)
+            }
+          >
+            <ChevronRight className="w-10 h-10" />
+          </button>
+        </>
+      )}
+
+      {/* Actual image */}
       <motion.img
         key={current.secure_url}
         src={current.secure_url}
         alt={current.public_id}
-        className="max-h-[85vh] w-auto object-contain rounded-lg shadow-xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
+        className="max-h-[85vh] w-auto object-contain rounded-lg shadow-xl"
       />
-      {/* navigation arrows */}
-      {navigation && index > 0 && (
-        <button
-          onClick={prev}
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-      )}
-      {navigation && index + 1 < images.length && (
-        <button
-          onClick={next}
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
-      )}
     </div>
   );
 }
