@@ -58,13 +58,14 @@ export default function Modal({
           exit={{ opacity: 0, scale: 0.97 }}
           transition={{ duration: 0.2 }}
         >
-          <SharedModal
-            index={curIndex}
-            images={images}
-            changePhotoId={changePhotoId}
-            closeModal={onClose}
-            navigation={true}
-          />
+        <SharedModal
+          index={curIndex}
+          images={images}
+          currentPhoto={images[curIndex]}
+          changePhotoId={changePhotoId}
+          closeModal={onClose}
+          navigation={true}
+        />
         </motion.div>
       </Dialog>
     </AnimatePresence>
