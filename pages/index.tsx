@@ -47,7 +47,7 @@ export default function Home({ images }: { images: ImageProps[] }) {
 
       <main className="mx-auto max-w-[1960px] p-6 bg-black min-h-screen text-white">
         {/* Search bar */}
-        <section className="mx-auto mb-6 flex max-w-3xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        {/* <section className="mx-auto mb-6 flex max-w-3xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex-1">
             <input
               type="text"
@@ -60,7 +60,7 @@ export default function Home({ images }: { images: ImageProps[] }) {
           <p className="mt-1 text-xs text-[#BEFFDC]/70 sm:mt-0 sm:ml-3 whitespace-nowrap">
             Showing {filteredImages.length} of {images.length} photos
           </p>
-        </section>
+        </section> */}
 
         {/* Hero + Gallery */}
         <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4 [column-fill:_balance]">
