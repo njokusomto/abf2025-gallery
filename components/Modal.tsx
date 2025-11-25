@@ -16,22 +16,46 @@ export default function Modal({
   onClose: () => void;
 }) {
   const [curIndex, setCurIndex] = useState(initialIndex);
+  const [isHiRes, setIsHiRes] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-      if (e.key === "ArrowRight" && curIndex < images.length - 1)
-        setCurIndex((c) => c + 1);
-      if (e.key === "ArrowLeft" && curIndex > 0)
-        setCurIndex((c) => c - 1);
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [curIndex, images.length, onClose]);
+  }, [onClose]);
+
+  useEffect(() => {
+    setIsHiRes(false);
+
+    const timer = setTimeout(() => {
+      setIsHiRes(true);
+    }, 7000);
+
+    return () => clearTimeout(timer);
+  }, [curIndex]);
+
+  useEffect(() => {
+    const preloadIndexes = [];
+
+    for (let i = 1; i <= 5; i++) {
+      if (curIndex - i >= 0) preloadIndexes.push(curIndex - i);
+    }
+    for (let i = 1; i <= 10; i++) {
+      if (curIndex + i < images.length) preloadIndexes.push(curIndex + i);
+    }
+
+    preloadIndexes.forEach((i) => {
+      const img = new Image();
+      img.src = images[i].secure_url;
+    });
+  }, [curIndex, images]);
 
   const changePhotoId = (newVal: number) => {
-    if (newVal >= 0 && newVal < images.length) setCurIndex(newVal);
+    if (newVal < 0 || newVal >= images.length) return;
+    setCurIndex(newVal);
   };
 
   return (
@@ -57,6 +81,7 @@ export default function Modal({
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.97 }}
+          transition={{ duration: 0.2 }}
         >
           <SharedModal
             index={curIndex}
@@ -65,6 +90,7 @@ export default function Modal({
             changePhotoId={changePhotoId}
             closeModal={onClose}
             navigation={true}
+            isHiRes={isHiRes}
           />
         </motion.div>
       </Dialog>
