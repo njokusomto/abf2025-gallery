@@ -16,9 +16,18 @@ export default function Modal({
   onClose: () => void;
 }) {
   const [curIndex, setCurIndex] = useState(initialIndex);
+
+  // hi-res loading toggle for modal mode
   const [isHiRes, setIsHiRes] = useState(false);
+
   const overlayRef = useRef<HTMLDivElement>(null);
 
+  // Reset hi-res whenever user navigates
+  useEffect(() => {
+    setIsHiRes(false);
+  }, [curIndex]);
+
+  // ESC closes modal
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -27,32 +36,7 @@ export default function Modal({
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  useEffect(() => {
-    setIsHiRes(false);
-
-    const timer = setTimeout(() => {
-      setIsHiRes(true);
-    }, 7000);
-
-    return () => clearTimeout(timer);
-  }, [curIndex]);
-
-  useEffect(() => {
-    const preloadIndexes = [];
-
-    for (let i = 1; i <= 5; i++) {
-      if (curIndex - i >= 0) preloadIndexes.push(curIndex - i);
-    }
-    for (let i = 1; i <= 10; i++) {
-      if (curIndex + i < images.length) preloadIndexes.push(curIndex + i);
-    }
-
-    preloadIndexes.forEach((i) => {
-      const img = new Image();
-      img.src = images[i].secure_url;
-    });
-  }, [curIndex, images]);
-
+  // Navigation
   const changePhotoId = (newVal: number) => {
     if (newVal < 0 || newVal >= images.length) return;
     setCurIndex(newVal);
@@ -91,6 +75,7 @@ export default function Modal({
             closeModal={onClose}
             navigation={true}
             isHiRes={isHiRes}
+            setIsHiRes={setIsHiRes}
           />
         </motion.div>
       </Dialog>
