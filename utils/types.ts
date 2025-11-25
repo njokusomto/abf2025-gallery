@@ -6,7 +6,7 @@ export type ImageProps = {
   blurDataUrl?: string;
   width: number;
   height: number;
-  secure_url: string;
+  secure_url?: string;
 };
 
 export interface SharedModalProps {
