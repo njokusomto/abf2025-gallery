@@ -6,11 +6,14 @@ import {
   X,
   Twitter,
   Instagram,
-  Download
+  Download,
 } from "lucide-react";
-import WhatsAppIcon from "./Icons/WhatsAppIcon";
 import { motion } from "framer-motion";
+import { useSwipeable } from "react-swipeable";
+import useKeypress from "react-use-keypress";
+import { useEffect } from "react";
 import type { ImageProps } from "../utils/types";
+import WhatsAppIcon from "./Icons/WhatsAppIcon";
 
 export default function SharedModal({
   index,
@@ -20,6 +23,7 @@ export default function SharedModal({
   closeModal,
   navigation,
   isHiRes,
+  setIsHiRes,
 }: {
   index: number;
   images: ImageProps[];
@@ -28,8 +32,8 @@ export default function SharedModal({
   closeModal: () => void;
   navigation: boolean;
   isHiRes: boolean;
+  setIsHiRes: (v: boolean) => void;
 }) {
-
   const base = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
 
   const lowResSrc = `${base}/c_scale,w_600/${currentPhoto.public_id}.${currentPhoto.format}`;
@@ -37,9 +41,53 @@ export default function SharedModal({
 
   const displayedSrc = isHiRes ? hiResSrc : lowResSrc;
 
-  return (
-    <div className="relative flex flex-col items-center justify-center">
+  // upgrade to hi-res after 7 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => setIsHiRes(true), 7000);
+    return () => clearTimeout(timer);
+  }, [currentPhoto, setIsHiRes]);
 
+  // preload next/previous images
+  useEffect(() => {
+    const preloadList: string[] = [];
+
+    for (let i = index - 5; i <= index + 10; i++) {
+      if (i >= 0 && i < images.length) {
+        preloadList.push(
+          `${base}/c_scale,w_600/${images[i].public_id}.${images[i].format}`
+        );
+      }
+    }
+
+    preloadList.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, [index, images]);
+
+  useKeypress("ArrowRight", () => {
+    if (navigation && index < images.length - 1) changePhotoId(index + 1);
+  });
+
+  useKeypress("ArrowLeft", () => {
+    if (navigation && index > 0) changePhotoId(index - 1);
+  });
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      if (navigation && index < images.length - 1) changePhotoId(index + 1);
+    },
+    onSwipedRight: () => {
+      if (navigation && index > 0) changePhotoId(index - 1);
+    },
+    trackMouse: true,
+  });
+
+  return (
+    <div
+      {...swipeHandlers}
+      className="relative flex flex-col items-center justify-center"
+    >
       <motion.img
         key={currentPhoto.public_id}
         src={displayedSrc}
