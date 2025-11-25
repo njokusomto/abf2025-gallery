@@ -9,42 +9,55 @@ export default function Carousel({
   index,
   images,
   onClose,
+  changePhotoId,
 }: {
   index: number;
   images: ImageProps[];
   onClose: () => void;
+  changePhotoId: (newVal: number) => void;
 }) {
-  // handles closing via escape key and overlay click
-  const handleClose = () => onClose();
-  useKeypress("Escape", handleClose);
+  const current = images[index];
 
-  // carousel doesn't need to handle navigation; just pass index back
-  const changePhotoId = () => {
-    return;
-  };
+  // ESC closes modal
+  useKeypress("Escape", () => {
+    onClose();
+  });
+
+  // keyboard navigation
+  useKeypress("ArrowRight", () => {
+    if (index < images.length - 1) changePhotoId(index + 1);
+  });
+
+  useKeypress("ArrowLeft", () => {
+    if (index > 0) changePhotoId(index - 1);
+  });
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* darkened backdrop; clicking closes modal */}
+      {/* Dim background */}
       <button
         className="absolute inset-0 z-30 cursor-default bg-black/80 backdrop-blur-2xl"
-        onClick={handleClose}
-        aria-label="Close Lightbox"
+        onClick={onClose}
+        aria-label="Close lightbox"
       >
-        <Image
-          src={images[index].blurDataUrl || "/placeholder.png"}
-          alt=""
-          className="pointer-events-none h-full w-full object-cover opacity-60"
-          fill
-        />
+        {current.blurDataUrl && (
+          <Image
+            src={current.blurDataUrl}
+            alt="blurred background"
+            className="pointer-events-none h-full w-full object-cover opacity-70"
+            fill
+          />
+        )}
       </button>
-      {/* Use SharedModal to display the current image without navigation */}
+
+      {/* Actual modal content */}
       <SharedModal
         index={index}
         images={images}
+        currentPhoto={current}
         changePhotoId={changePhotoId}
-        closeModal={handleClose}
-        navigation={false}
+        closeModal={onClose}
+        navigation={true}
       />
     </div>
   );

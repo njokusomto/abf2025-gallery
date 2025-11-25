@@ -1,99 +1,114 @@
 "use client";
 
-import { motion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
   X,
-  Download,
   Twitter,
   Instagram,
+  Download,
   MessageCircle,
 } from "lucide-react";
-import type { ImageProps, SharedModalProps } from "../utils/types";
-import useKeypress from "react-use-keypress";
+import { motion } from "framer-motion";
+import type { ImageProps } from "../utils/types";
 
 export default function SharedModal({
   index,
   images,
+  currentPhoto,
   changePhotoId,
   closeModal,
   navigation,
-}: SharedModalProps) {
-  const current: ImageProps = images![index];
-
-  useKeypress("ArrowRight", () => {
-    if (!navigation) return;
-    if (index + 1 < images!.length) changePhotoId(index + 1);
-  });
-
-  useKeypress("ArrowLeft", () => {
-    if (!navigation) return;
-    if (index > 0) changePhotoId(index - 1);
-  });
-
-  const shareUrl = current.secure_url;
+}: {
+  index: number;
+  images: ImageProps[];
+  currentPhoto: ImageProps;
+  changePhotoId: (val: number) => void;
+  closeModal: () => void;
+  navigation: boolean;
+}) {
+  const current = currentPhoto;
+  const src = current.secure_url; // IMPORTANT
 
   return (
-    <div className="relative flex flex-col items-center">
-      {/* Controls */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-40">
-        <div className="flex items-center gap-4 bg-black/60 px-4 py-2 rounded-full text-white">
-          <button onClick={closeModal} className="flex items-center gap-2">
-            <X className="w-4 h-4" />
-            CLOSE
-          </button>
-
-          <span>Share</span>
-
-          <a href={`https://twitter.com/share?url=${shareUrl}`} target="_blank">
-            <Twitter className="w-4 h-4" />
-          </a>
-
-          <a href={`https://www.instagram.com/?url=${shareUrl}`} target="_blank">
-            <Instagram className="w-4 h-4" />
-          </a>
-
-          <a href={`https://wa.me/?text=${shareUrl}`} target="_blank">
-            <MessageCircle className="w-4 h-4" /> 
-          </a>
-
-          <a href={shareUrl} download>
-            <Download className="w-4 h-4" />
-          </a>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      {navigation && (
-        <>
-          <button
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-white z-40"
-            onClick={() => index > 0 && changePhotoId(index - 1)}
-          >
-            <ChevronLeft className="w-10 h-10" />
-          </button>
-
-          <button
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-white z-40"
-            onClick={() =>
-              index + 1 < images!.length && changePhotoId(index + 1)
-            }
-          >
-            <ChevronRight className="w-10 h-10" />
-          </button>
-        </>
-      )}
-
-      {/* Actual image */}
+    <div className="relative flex flex-col items-center justify-center">
+      {/* IMAGE */}
       <motion.img
-        key={current.secure_url}
-        src={current.secure_url}
+        key={current.public_id}
+        src={src}
         alt={current.public_id}
+        className="max-h-[85vh] w-auto object-contain rounded-lg shadow-xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="max-h-[85vh] w-auto object-contain rounded-lg shadow-xl"
       />
+
+      {/* TOP BAR */}
+      <div className="absolute top-4 flex items-center space-x-3 px-4 py-2 bg-black/60 rounded-full text-white shadow-xl">
+        <button onClick={closeModal} className="flex items-center hover:text-red-400">
+          <X size={18} />
+          <span className="ml-1 text-sm">CLOSE</span>
+        </button>
+
+        <span className="text-sm opacity-80">Share</span>
+
+        {/* Twitter */}
+        <a
+          href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(src)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-blue-400"
+        >
+          <Twitter size={18} />
+        </a>
+
+        {/* Instagram (no direct sharing API) */}
+        <a
+          href="https://instagram.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-pink-400"
+        >
+          <Instagram size={18} />
+        </a>
+
+        {/* WhatsApp */}
+        <a
+          href={`https://wa.me/?text=${encodeURIComponent(src)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-green-400"
+        >
+          <MessageCircle size={18} />
+        </a>
+
+        {/* Download */}
+        <a href={src} download className="hover:text-gray-200">
+          <Download size={18} />
+        </a>
+      </div>
+
+      {/* ARROWS */}
+      {navigation && images.length > 1 && (
+        <>
+          {index > 0 && (
+            <button
+              onClick={() => changePhotoId(index - 1)}
+              className="absolute left-6 top-1/2 -translate-y-1/2 bg-black/50 p-3 rounded-full text-white hover:bg-black/70"
+            >
+              <ChevronLeft size={32} />
+            </button>
+          )}
+
+          {index < images.length - 1 && (
+            <button
+              onClick={() => changePhotoId(index + 1)}
+              className="absolute right-6 top-1/2 -translate-y-1/2 bg-black/50 p-3 rounded-full text-white hover:bg-black/70"
+            >
+              <ChevronRight size={32} />
+            </button>
+          )}
+        </>
+      )}
     </div>
   );
 }
