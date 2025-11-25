@@ -16,51 +16,45 @@ export default function Home({ images }: { images: ImageProps[] }) {
   return (
     <>
       <Head>
-        <title>Africa Blockchain Festival 2025 Photos | Relive the Experience!</title>
+        <title>Africa Blockchain Festival 2025 Photos</title>
         <meta property="og:image" content="/ABF-2025-Gallery.jpg" />
       </Head>
 
       <main className="mx-auto max-w-[1960px] p-6 bg-black min-h-screen text-white">
 
-        {/* TOP SECTION: HERO + 3 IMAGE COLUMNS */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 [column-fill:_balance]">
 
-          {/* HERO CARD (Column 1 of 4) */}
+          {/* Hero card */}
           <motion.div
-            className="relative flex flex-col items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-b 
-            from-[#1b3540] via-[#143140] to-[#122e3a] p-10 text-center shadow-[0_12px_40px_rgba(0,0,0,0.4)] 
-            backdrop-blur-md h-[680px] md:col-span-1"
+            className="relative mb-6 inline-block w-full overflow-hidden rounded-3xl 
+              bg-gradient-to-b from-[#1b3540] via-[#143140] to-[#122e3a]
+              p-10 text-center shadow-lg backdrop-blur-md h-[680px] break-inside-avoid"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            {/* Background silhouette */}
             <div className="absolute top-8 left-0 right-0 flex justify-center opacity-25">
               <Image
                 src="/rwanda-outline.png"
                 alt="Kigali Skyline"
-                width={1100}
-                height={400}
-                unoptimized
+                width={1000}
+                height={300}
                 className="object-contain filter brightness-0 invert"
               />
             </div>
 
-            {/* Foreground content */}
-            <div className="relative z-10 flex flex-col items-center justify-center mt-40">
-              <div className="flex justify-center items-center scale-110 mb-8">
-                <Logo />
-              </div>
+            <div className="relative z-10 flex flex-col items-center mt-40">
+              <Logo className="scale-110 mb-8" />
               <h1 className="text-lg font-semibold uppercase tracking-[0.25em] text-[#BEFFDC] mb-4">
                 2025 Event Photos
               </h1>
               <p className="max-w-[45ch] text-[#BEFFDC]/80 leading-relaxed mb-8">
-                Our incredible Africa Blockchain Festival community came together in Rwanda
-                for our first-ever in-person conference!
+                Our incredible Africa Blockchain Festival community came together
+                in Rwanda for our first-ever in-person conference.
               </p>
               <a
-                className="inline-block rounded-lg border-2 border-[#FE4600] bg-[#FE4600] px-6 py-2.5 text-sm 
-                font-semibold text-white shadow-md transition-all hover:bg-transparent hover:text-[#FE4600]"
+                className="inline-block rounded-lg border-2 border-[#FE4600] bg-[#FE4600] px-6 py-2.5 
+                   text-sm font-semibold transition hover:bg-transparent hover:text-[#FE4600]"
                 href="https://africablockchainfestival.com"
                 target="_blank"
                 rel="noreferrer"
@@ -70,60 +64,26 @@ export default function Home({ images }: { images: ImageProps[] }) {
             </div>
           </motion.div>
 
-          {/* 3 IMAGE COLUMNS BESIDE HERO */}
-          <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {images.slice(0, 12).map(({ id, public_id, format, blurDataUrl }) => (
-              <motion.div
-                key={id}
-                className="group relative block w-full cursor-zoom-in overflow-hidden rounded-2xl shadow-md 
-                transition-all duration-300 hover:shadow-2xl"
-                onClick={() => setSelectedIndex(id)}
-                initial={{ opacity: 0, scale: 0.98 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: id * 0.015 }}
-              >
-                <Image
-                  alt={`ABF 2025 photo ${id}`}
-                  className="rounded-2xl brightness-90 transition-all duration-500 ease-out 
-                  group-hover:scale-105 group-hover:brightness-110"
-                  placeholder="blur"
-                  blurDataURL={blurDataUrl}
-                  src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_scale,w_600/${public_id}.${format}`}
-                  width={600}
-                  height={400}
-                  sizes="33vw"
-                  loading="lazy"
-                  unoptimized
-                />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* BELOW HERO: 5-COLUMN GRID */}
-        <div className="columns-2 sm:columns-3 lg:columns-5 gap-4 [column-fill:_balance]">
-          {images.slice(12).map(({ id, public_id, format, blurDataUrl }) => (
+          {/* Masonry images */}
+          {images.map(({ id, public_id, format, blurDataUrl }) => (
             <motion.div
               key={id}
-              className="group relative mb-4 block w-full cursor-zoom-in overflow-hidden rounded-2xl shadow-md 
-              transition-all duration-300 hover:shadow-2xl"
+              className="relative mb-6 block w-full cursor-zoom-in overflow-hidden rounded-2xl 
+                shadow-md transition hover:shadow-xl break-inside-avoid"
               onClick={() => setSelectedIndex(id)}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: (id % 20) * 0.02 }}
+              transition={{ duration: 0.4 }}
             >
               <Image
-                alt={`ABF 2025 photo ${id}`}
-                className="rounded-2xl brightness-90 transition-all duration-500 ease-out 
-                group-hover:scale-105 group-hover:brightness-110"
+                alt={`ABF photo ${id}`}
+                className="rounded-2xl brightness-90 transition-all duration-500"
                 placeholder="blur"
                 blurDataURL={blurDataUrl}
-                src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_scale,w_500/${public_id}.${format}`}
-                width={500}
-                height={350}
-                sizes="20vw"
+                src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_scale,w_600/${public_id}.${format}`}
+                width={600}
+                height={800}
                 loading="lazy"
                 unoptimized
               />
@@ -132,9 +92,12 @@ export default function Home({ images }: { images: ImageProps[] }) {
         </div>
       </main>
 
-      {/* MODAL */}
       {selectedIndex !== null && (
-        <Modal images={images} initialIndex={selectedIndex} onClose={() => setSelectedIndex(null)} />
+        <Modal
+          images={images}
+          initialIndex={selectedIndex}
+          onClose={() => setSelectedIndex(null)}
+        />
       )}
     </>
   );
@@ -158,8 +121,12 @@ export async function getStaticProps() {
   const blurImagePromises = results.resources.map((img: ImageProps) =>
     getBase64ImageUrl(img)
   );
+
   const imagesWithBlurDataUrls = await Promise.all(blurImagePromises);
-  reducedResults.forEach((r, i) => (r.blurDataUrl = imagesWithBlurDataUrls[i]));
+
+  reducedResults.forEach((r, i) => {
+    r.blurDataUrl = imagesWithBlurDataUrls[i];
+  });
 
   return { props: { images: reducedResults } };
 }
