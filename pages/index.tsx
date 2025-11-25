@@ -62,14 +62,11 @@ export default function Home({ images }: { images: ImageProps[] }) {
           </p>
         </section> */}
 
-        {/* 4-column Masonry Grid but hero card spans 2 columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-
-          {/* HERO CARD — spans 2 columns */}
+        {/* Hero + Gallery */}
+        <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4 [column-fill:_balance]">
+          {/* Hero Card */}
           <motion.div
-            className="relative mb-5 flex flex-col items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-b 
-                      from-[#1b3540] via-[#143140] to-[#122e3a] p-10 text-center shadow-[0_12px_40px_rgba(0,0,0,0.4)]
-                      backdrop-blur-md h-[680px] col-span-1 sm:col-span-2"
+            className="relative mb-5 flex flex-col items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-b from-[#1b3540] via-[#143140] to-[#122e3a] p-10 text-center shadow-[0_12px_40px_rgba(0,0,0,0.4)] backdrop-blur-md h-[680px]"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -87,6 +84,7 @@ export default function Home({ images }: { images: ImageProps[] }) {
               />
             </div>
 
+            {/* Centered Content */}
             <div className="relative z-10 flex flex-col items-center justify-center mt-40">
               <div className="flex justify-center items-center scale-110 mb-8">
                 <Logo />
@@ -96,7 +94,7 @@ export default function Home({ images }: { images: ImageProps[] }) {
               </h1>
               <p className="max-w-[45ch] text-[#BEFFDC]/80 leading-relaxed mb-8">
                 Our incredible Africa Blockchain Festival community came
-                together in Rwanda for our first-ever in-person conference!
+                together in Rwanda for our first-ever in-person conference.
               </p>
               <a
                 className="inline-block rounded-lg border-2 border-[#FE4600] bg-[#FE4600] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-transparent hover:text-[#FE4600]"
@@ -109,12 +107,11 @@ export default function Home({ images }: { images: ImageProps[] }) {
             </div>
           </motion.div>
 
-          {/* Masonry-style Images */}
-          {images.map(({ id, public_id, format, blurDataUrl }) => (
+          {/* Gallery Grid */}
+          {filteredImages.map(({ id, public_id, format, blurDataUrl }) => (
             <motion.div
               key={id}
-              className="group relative mb-5 block w-full cursor-zoom-in overflow-hidden rounded-2xl shadow-md 
-                        transition-all duration-300 hover:shadow-2xl"
+              className="group relative mb-5 block w-full cursor-zoom-in overflow-hidden rounded-2xl shadow-md transition-all duration-300 hover:shadow-2xl"
               onClick={() => setSelectedIndex(id)}
               initial={{ opacity: 0, scale: 0.98 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -123,22 +120,30 @@ export default function Home({ images }: { images: ImageProps[] }) {
             >
               <Image
                 alt={`Africa Blockchain Festival 2025 photo ${id}`}
-                className="rounded-2xl brightness-90 transition-all duration-500 ease-out group-hover:scale-105 
-                          group-hover:brightness-110"
+                className="rounded-2xl brightness-90 transition-all duration-500 ease-out group-hover:scale-105 group-hover:brightness-110"
                 placeholder="blur"
                 blurDataURL={blurDataUrl}
                 src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_scale,w_720/${public_id}.${format}`}
                 width={720}
                 height={480}
                 sizes="(max-width: 640px) 100vw,
-                      (max-width: 1280px) 50vw,
-                      (max-width: 1536px) 33vw,
-                      25vw"
+                       (max-width: 1280px) 50vw,
+                       (max-width: 1536px) 33vw,
+                       25vw"
                 loading="lazy"
                 unoptimized
               />
             </motion.div>
           ))}
+
+          {/* Empty state */}
+          {filteredImages.length === 0 && (
+            <div className="mb-5 rounded-2xl border border-dashed border-[#294755] bg-[#0B1820] p-6 text-sm text-[#BEFFDC]/80">
+              No photos match your search. Try a different keyword such as
+              part of the filename (for example, "day_two", "panel") or clear
+              the search box to see all photos again.
+            </div>
+          )}
         </div>
       </main>
 
