@@ -6,38 +6,33 @@ import { useEffect, useRef, useState } from "react";
 import type { ImageProps } from "../utils/types";
 import SharedModal from "./SharedModal";
 
-type ModalProps = {
+export default function Modal({
+  images,
+  initialIndex,
+  onClose,
+}: {
   images: ImageProps[];
   initialIndex: number;
   onClose: () => void;
-};
-
-export default function Modal({ images, initialIndex, onClose }: ModalProps) {
+}) {
   const [curIndex, setCurIndex] = useState(initialIndex);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  const maxIndex = images.length - 1;
-
-  const changePhotoId = (newVal: number) => {
-    if (newVal < 0 || newVal > maxIndex) return;
-    setCurIndex(newVal);
-  };
-
-  // ESC to close, arrows to navigate
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      } else if (e.key === "ArrowRight") {
-        setCurIndex((prev) => (prev < maxIndex ? prev + 1 : prev));
-      } else if (e.key === "ArrowLeft") {
-        setCurIndex((prev) => (prev > 0 ? prev - 1 : prev));
-      }
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight" && curIndex < images.length - 1)
+        setCurIndex((c) => c + 1);
+      if (e.key === "ArrowLeft" && curIndex > 0)
+        setCurIndex((c) => c - 1);
     };
-
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [onClose, maxIndex]);
+  }, [curIndex, images.length, onClose]);
+
+  const changePhotoId = (newVal: number) => {
+    if (newVal >= 0 && newVal < images.length) setCurIndex(newVal);
+  };
 
   return (
     <AnimatePresence>
@@ -48,7 +43,6 @@ export default function Modal({ images, initialIndex, onClose }: ModalProps) {
         initialFocus={overlayRef}
         className="fixed inset-0 z-50 flex items-center justify-center"
       >
-        {/* Dimmed overlay */}
         <Dialog.Overlay
           ref={overlayRef}
           as={motion.div}
@@ -58,14 +52,11 @@ export default function Modal({ images, initialIndex, onClose }: ModalProps) {
           exit={{ opacity: 0 }}
         />
 
-        {/* Modal content */}
         <motion.div
-          key={curIndex}
           className="relative z-50 flex items-center justify-center w-full h-full px-4"
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.97 }}
-          transition={{ duration: 0.2 }}
         >
           <SharedModal
             index={curIndex}

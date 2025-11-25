@@ -18,39 +18,30 @@ export default function Carousel({
 }) {
   const current = images[index];
 
-  // ESC closes modal
-  useKeypress("Escape", () => {
-    onClose();
-  });
-
-  // keyboard navigation
+  useKeypress("Escape", onClose);
   useKeypress("ArrowRight", () => {
     if (index < images.length - 1) changePhotoId(index + 1);
   });
-
   useKeypress("ArrowLeft", () => {
     if (index > 0) changePhotoId(index - 1);
   });
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Dim background */}
       <button
         className="absolute inset-0 z-30 cursor-default bg-black/80 backdrop-blur-2xl"
         onClick={onClose}
-        aria-label="Close lightbox"
       >
         {current.blurDataUrl && (
           <Image
             src={current.blurDataUrl}
+            fill
             alt="blurred background"
             className="pointer-events-none h-full w-full object-cover opacity-70"
-            fill
           />
         )}
       </button>
 
-      {/* Actual modal content */}
       <SharedModal
         index={index}
         images={images}
