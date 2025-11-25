@@ -63,7 +63,8 @@ export default function Home({ images }: { images: ImageProps[] }) {
         </section> */}
 
         {/* Hero + Gallery */}
-        <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4 [column-fill:_balance]">
+        <div className="columns-2 gap-3 sm:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6
+ [column-fill:_balance]">
           {/* Hero Card */}
           <motion.div
             className="relative mb-5 flex flex-col items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-b from-[#1b3540] via-[#143140] to-[#122e3a] p-10 text-center shadow-[0_12px_40px_rgba(0,0,0,0.4)] backdrop-blur-md h-[680px]"
