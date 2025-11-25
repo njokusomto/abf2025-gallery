@@ -16,14 +16,21 @@ export default function Home({ images }: { images: ImageProps[] }) {
 
   const normalizedSearch = searchTerm.toLowerCase().trim();
 
-  // Filter images client-side for now (by filename / public_id)
-  // If you later add descriptions or tags to ImageProps, extend this filter.
   const filteredImages = useMemo(() => {
     if (!normalizedSearch) return images;
 
-    return images.filter((img) =>
-      img.public_id.toLowerCase().includes(normalizedSearch),
-    );
+    // If the user types a number, allow direct lookup by photo ID as well
+    const asNumber = Number(normalizedSearch);
+    const searchIsNumber = !Number.isNaN(asNumber);
+
+    return images.filter((img) => {
+      const filename = (img.public_id.split("/").pop() || img.public_id).toLowerCase();
+
+      const matchesFilename = filename.includes(normalizedSearch);
+      const matchesId = searchIsNumber && img.id === asNumber;
+
+      return matchesFilename || matchesId;
+    });
   }, [images, normalizedSearch]);
 
   return (
@@ -46,7 +53,7 @@ export default function Home({ images }: { images: ImageProps[] }) {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search photos by filename (e.g. panel, keynote, reception)..."
+              placeholder="Search by internal filename keyword (e.g. 'day_two', 'panel') or photo number..."
               className="w-full rounded-xl border border-[#294755] bg-[#0B1820] px-4 py-2 text-sm text-[#BEFFDC] placeholder:text-[#BEFFDC]/50 shadow-[0_0_0_1px_rgba(0,0,0,0.4)] focus:outline-none focus:ring-2 focus:ring-[#FE4600]"
             />
           </div>
@@ -132,7 +139,8 @@ export default function Home({ images }: { images: ImageProps[] }) {
           {/* Empty state */}
           {filteredImages.length === 0 && (
             <div className="mb-5 rounded-2xl border border-dashed border-[#294755] bg-[#0B1820] p-6 text-sm text-[#BEFFDC]/80">
-              No photos match your search yet. Try a different word, or clear
+              No photos match your search. Try a different keyword such as
+              part of the filename (for example, "day_two", "panel") or clear
               the search box to see all photos again.
             </div>
           )}

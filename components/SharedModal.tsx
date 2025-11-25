@@ -75,15 +75,6 @@ export default function SharedModal({
         </a>
 
         <a
-          href="https://instagram.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-pink-400"
-        >
-          <Instagram size={18} />
-        </a>
-
-        <a
           href={`https://wa.me/?text=${encodeURIComponent(fullSrc)}`}
           target="_blank"
           rel="noopener noreferrer"
