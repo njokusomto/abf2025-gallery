@@ -1,6 +1,4 @@
 import Document, { Head, Html, Main, NextScript } from "next/document";
-import { Analytics } from "@vercel/analytics/next"
-import { SpeedInsights } from "@vercel/speed-insights/next"
 
 class MyDocument extends Document {
   render() {
